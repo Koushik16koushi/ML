@@ -1,0 +1,686 @@
+Experiment 1
+Develop a program to create histograms for all numerical
+features and analyze the distribution of each feature.
+Generate box plots for all numerical features and identify
+any outliers. Use California Housing dataset.
+
+Introduction
+Data visualization is a crucial step in exploratory data analysis (EDA), enabling data scientists
+to understand the distribution and spread of numerical features. Two widely used
+visualization techniques for analyzing numerical data are histograms and box plots. These
+plots help identify patterns, trends, and potential anomalies in datasets, making them
+valuable tools for data preprocessing and feature engineering.
+
+Distribution
+In statistics, distribution refers to how data values are spread across a range. Understanding
+the distribution of numerical features in a dataset helps in identifying patterns, detecting
+outliers, and making informed decisions. The two primary ways to visualize distribution are
+histograms and box plots.
+
+1. Histograms
+A histogram is a graphical representation of the distribution of a numerical feature. It divides
+the data into bins (intervals) and counts the number of observations in each bin.
+Importance of Histograms
+Detecting Skewness: A histogram can reveal whether a distribution is symmetric, leftskewed, or right-skewed.
+Identifying Modal Patterns: Some distributions are unimodal (single peak), while
+others may be bimodal or multimodal.
+Assessing Normality: If the histogram resembles a bell curve, the data may be normally
+distributed.
+Understanding Data Spread: Helps in detecting whether data is evenly distributed or
+concentrated in certain regions.
+
+2. Box Plots (Box-and-Whisker Plots)
+A box plot provides a summary of the distribution of numerical data using five key statistics:
+Minimum: The smallest value (excluding outliers).
+
+1
+
+First Quartile (Q1): 25th percentile.
+Median (Q2): 50th percentile (middle value).
+Third Quartile (Q3): 75th percentile.
+Maximum: The largest value (excluding outliers).
+Outliers are detected using the Interquartile Range (IQR) rule:
+Outliers = Values outside Q1 - 1.5 * IQR or Q3 + 1.5 * IQR.
+Importance of Box Plots
+Identifying Outliers: Points lying outside the whiskers indicate potential outliers.
+Comparing Distributions: Box plots allow easy comparison of multiple features or
+groups.
+Measuring Data Spread: The length of the box and whiskers provides insight into data
+variability.
+Understanding Skewness: If the median is closer to one end, the distribution may be
+skewed.
+
+Outlier
+An outlier is an observation or data point that significantly differs from the rest of the data in
+a dataset. Outliers can skew statistical analyses and distort the interpretation of results,
+making it important to identify and understand them.
+
+Key Characteristics of Outliers:
+Deviation from the Norm:
+Outliers exhibit values that deviate substantially from the typical or expected range
+of values in a dataset.
+Impact on Statistical Measures:
+Outliers can heavily influence summary statistics such as the mean and standard
+deviation, leading to misleading representations of central tendency and dispersion.
+Identification:
+Outliers are often identified through statistical methods or visual inspection of
+graphs; such as box plots or scatter plots.
+Causes of Outliers:
+Outliers can arise from measurement errors, data entry mistakes, natural variability,
+or genuine extreme observations in the population.
+
+Ways to Identify Outliers:
+Visual Inspection:
+
+2
+
+Plotting the data using graphs like box plots, scatter plots, or histograms can reveal
+observations that stand out from the majority.
+Statistical Methods:
+Z-Score: Identifying data points with z-scores beyond a certain threshold (e.g., |z| >
+3) as potential outliers.
+Z = (x-µ)/σ
+Interquartile Range (IQR): Using the IQR to identify observations outside a defined
+range.
+IQR = Q3 - Q1
+LF = Q1 - (1.5*IQR)
+UF = Q3 + (1.5*IQR)
+
+Dealing with Outliers:
+Retaining Outliers:
+In some cases, it may be appropriate to retain outliers, especially if they represent
+genuine extreme values in the data.
+Retaining outliers allows for an inclusive analysis, considering the full range of variability
+in the dataset.
+Removing Outliers:
+Removing outliers involves excluding extreme values from the dataset before analysis.
+Common methods include using statistical criteria (e.g., Z-scores, IQR) to identify and
+exclude observations beyond a certain threshold.
+Reduces the impact of extreme values on summary statistics and model results
+Loss of information: Excluding outliers may discard meaningful data points.
+Transformation:
+Transformation involves applying mathematical functions to the data to modify its
+distribution and reduce the impact of outliers.
+Common transformations include logarithmic, square root, or Cube root
+transformations.
+
+Application in Data Analysis
+Histograms and box plots play a crucial role in:
+Data Cleaning: Detecting anomalies and erroneous values.
+Feature Engineering: Identifying transformations needed for better model performance.
+Understanding Dataset Characteristics: Providing insight into feature distributions,
+which informs modeling decisions.
+
+3
+
+About Dataset
+Context
+This is the dataset used in the second chapter of Aurélien Géron's recent book 'Hands-On
+Machine learning with Scikit-Learn and TensorFlow'. It serves as an excellent introduction to
+implementing machine learning algorithms because it requires rudimentary data cleaning,
+has an easily understandable list of variables and sits at an optimal size between being to
+toyish and too cumbersome.
+The data contains information from the 1990 California census. So although it may not help
+you with predicting current housing prices like the Zillow Zestimate dataset, it does provide
+an accessible introductory dataset for teaching people about the basics of machine learning.
+
+Content
+The data pertains to the houses found in a given California district and some summary stats
+about them based on the 1990 census data. Be warned the data aren't cleaned so there are
+some preprocessing steps required! The columns are as follows, their names are pretty self
+explanitory:
+longitude
+latitude
+housing_median_age
+total_rooms
+total_bedrooms
+population
+households
+median_income
+median_house_value (Target)
+ocean_proximity
+
+Import Necessary Libraries
+Import all libraries which are required for our analysis, such as Data Loading, Statistical
+analysis, Visualizations, Data Transformations, Merge and Joins, etc.
+
+4
+
+Pandas and Numpy have been used for Data Manipulation and numerical Calculations
+Matplotlib and Seaborn have been used for Data visualizations.
+In [18]: import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import warnings
+warnings.filterwarnings('ignore')
+In [19]: df = pd.read_csv(r'C:\Users\vijay\Desktop\Machine Learning Course Batches\FDP_ML_6t
+In [20]: df.head()
+longitude
+
+latitude
+
+housing_median_age
+
+total_rooms
+
+total_bedrooms
+
+population
+
+0
+
+-122.23
+
+37.88
+
+41.0
+
+880.0
+
+129.0
+
+322.0
+
+1
+
+-122.22
+
+37.86
+
+21.0
+
+7099.0
+
+1106.0
+
+2401.0
+
+2
+
+-122.24
+
+37.85
+
+52.0
+
+1467.0
+
+190.0
+
+496.0
+
+3
+
+-122.25
+
+37.85
+
+52.0
+
+1274.0
+
+235.0
+
+558.0
+
+4
+
+-122.25
+
+37.85
+
+52.0
+
+1627.0
+
+280.0
+
+565.0
+
+Out[20]:
+
+hou
+
+In [21]: df.shape
+Out[21]:
+
+(20640, 10)
+
+In [22]: df.info()
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 20640 entries, 0 to 20639
+Data columns (total 10 columns):
+#
+Column
+Non-Null Count
+--- ------------------0
+longitude
+20640 non-null
+1
+latitude
+20640 non-null
+2
+housing_median_age 20640 non-null
+3
+total_rooms
+20640 non-null
+4
+total_bedrooms
+20433 non-null
+5
+population
+20640 non-null
+6
+households
+20640 non-null
+7
+median_income
+20640 non-null
+8
+median_house_value 20640 non-null
+9
+ocean_proximity
+20640 non-null
+dtypes: float64(9), object(1)
+memory usage: 1.6+ MB
+
+Dtype
+----float64
+float64
+float64
+float64
+float64
+float64
+float64
+float64
+float64
+object
+
+In [23]: df.nunique()
+
+5
+
+Out[23]:
+
+longitude
+latitude
+housing_median_age
+total_rooms
+total_bedrooms
+population
+households
+median_income
+median_house_value
+ocean_proximity
+dtype: int64
+
+844
+862
+52
+5926
+1923
+3888
+1815
+12928
+3842
+5
+
+Data Cleaning
+In [24]: df.isnull().sum()
+Out[24]:
+
+longitude
+latitude
+housing_median_age
+total_rooms
+total_bedrooms
+population
+households
+median_income
+median_house_value
+ocean_proximity
+dtype: int64
+
+0
+0
+0
+0
+207
+0
+0
+0
+0
+0
+
+In [25]: df.duplicated().sum()
+Out[25]:
+
+0
+
+In [26]: df['total_bedrooms'].median()
+Out[26]:
+
+435.0
+
+In [27]: # Handling missing values
+df['total_bedrooms'].fillna(df['total_bedrooms'].median(), inplace=True)
+
+Feature Engineering
+In [28]: for i in df.iloc[:,2:7]:
+df[i] = df[i].astype('int')
+In [29]: df.head()
+
+6
+
+longitude
+
+latitude
+
+housing_median_age
+
+total_rooms
+
+total_bedrooms
+
+population
+
+0
+
+-122.23
+
+37.88
+
+41
+
+880
+
+129
+
+322
+
+1
+
+-122.22
+
+37.86
+
+21
+
+7099
+
+1106
+
+2401
+
+2
+
+-122.24
+
+37.85
+
+52
+
+1467
+
+190
+
+496
+
+3
+
+-122.25
+
+37.85
+
+52
+
+1274
+
+235
+
+558
+
+4
+
+-122.25
+
+37.85
+
+52
+
+1627
+
+280
+
+565
+
+Out[29]:
+
+hou
+
+Disciptive Statistics
+In [30]: df.describe().T
+count
+
+mean
+
+std
+
+min
+
+25%
+
+longitude
+
+20640.0
+
+-119.569704
+
+2.003532
+
+-124.3500
+
+-121.8000
+
+latitude
+
+20640.0
+
+35.631861
+
+2.135952
+
+32.5400
+
+33.9300
+
+housing_median_age
+
+20640.0
+
+28.639486
+
+12.585558
+
+1.0000
+
+18.0000
+
+total_rooms
+
+20640.0
+
+2635.763081
+
+2181.615252
+
+2.0000
+
+1447.7500
+
+21
+
+total_bedrooms
+
+20640.0
+
+536.838857
+
+419.391878
+
+1.0000
+
+297.0000
+
+4
+
+population
+
+20640.0
+
+1425.476744
+
+1132.462122
+
+3.0000
+
+787.0000
+
+11
+
+households
+
+20640.0
+
+499.539680
+
+382.329753
+
+1.0000
+
+280.0000
+
+40
+
+median_income
+
+20640.0
+
+3.870671
+
+1.899822
+
+0.4999
+
+2.5634
+
+median_house_value
+
+20640.0
+
+206855.816909
+
+115395.615874
+
+14999.0000
+
+119600.0000
+
+Out[30]:
+
+-1
+
+17970
+
+In [31]: Numerical = df.select_dtypes(include=[np.number]).columns
+print(Numerical)
+Index(['longitude', 'latitude', 'housing_median_age', 'total_rooms',
+'total_bedrooms', 'population', 'households', 'median_income',
+'median_house_value'],
+dtype='object')
+
+Uni-Variate Analysis
+In [32]: for col in Numerical:
+plt.figure(figsize=(10, 6))
+df[col].plot(kind='hist', title=col, bins=60, edgecolor='black')
+plt.ylabel('Frequency')
+plt.show()
+
+7
+
+8
+
+9
+
+10
+
+11
+
+1. Longitude:
+The dataset contains houses located in specific regions (possibly coastal areas or urban
+zones) as indicated by the bimodal peaks. Houses are not uniformly distributed across
+all longitudes.
+2. Latitude:
+Similar to longitude, the latitude distribution shows houses concentrated in particular
+zones. This suggests geographic clustering, possibly around major cities.
+3. Housing Median Age:
+Most houses are relatively older, with the majority concentrated in a specific range of
+median ages. This might imply that housing development peaked during certain
+decades.
+4. Total Rooms:
+The highly skewed distribution shows most houses have a lower total number of rooms.
+A few properties with a very high number of rooms could represent outliers (e.g.,
+mansions or multi-unit buildings).
+5. Median Income:
+Most households fall within a low-to-mid income bracket. The steep decline after the
+peak suggests a small proportion of high-income households in the dataset.
+
+12
+
+6. Population:
+Most areas in the dataset have a relatively low population. However, there are some
+highly populated areas, as evidenced by the long tail. These may represent urban
+centers.
+7. Median House Value:
+The sharp peak at the end of the histogram suggests that house prices in the dataset
+are capped at a maximum value, which could limit the variability in predictions.
+In [33]: for col in Numerical:
+plt.figure(figsize=(6, 6))
+sns.boxplot(df[col], color='blue')
+plt.title(col)
+plt.ylabel(col)
+plt.show()
+
+13
+
+14
+
+15
+
+16
+
+Outlier Analysis for Each Feature:
+1. Total Rooms: There are numerous data points above the upper whisker, indicating a
+significant number of outliers.
+2. Total Bedrooms: Numerous data points above the upper whisker indicate a significant
+presence of outliers with very high total_bedrooms values.
+
+17
+
+3. Population: There are numerous outliers above the upper whisker, with extreme
+population values reaching beyond 35,000.
+4. Households There is a significant number of outliers above the upper whisker. These
+values represent areas with an unusually high number of households.
+5. Median Income: There are numerous data points above the upper whisker, marked as
+circles. These are considered potential outliers.
+6. Median House Value: A small cluster of outliers is visible near the maximum
+value of 500,000.
+General Actions for Outlier Handling:
+Transformation: Apply log or square root transformations to reduce skewness for
+features like total rooms, population, and median income.
+Removal: If outliers are due to data errors or are not relevant, consider removing them.
+
+18
+
+
